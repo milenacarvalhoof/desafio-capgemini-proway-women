@@ -13,7 +13,7 @@ public class Calculadora {
 	 * @param dataTermino
 	 * @return
 	 */
-	public Long calculaQuantidadeDias(String dataInicio, String dataTermino ) {
+	public Integer calculaQuantidadeDias(String dataInicio, String dataTermino ) {
 		SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy");
 			
 		try {
@@ -21,7 +21,9 @@ public class Calculadora {
 		    Date date2 = myFormat.parse(dataTermino);
 		    Long qtdeDias = date2.getTime() - date1.getTime();
 			    
-		    return TimeUnit.DAYS.convert(qtdeDias, TimeUnit.MILLISECONDS);
+		    Long retorno = TimeUnit.DAYS.convert(qtdeDias, TimeUnit.MILLISECONDS);
+		    
+		    return retorno.intValue();
 		} catch (ParseException e) {
 		    e.printStackTrace();
 		}
@@ -34,7 +36,7 @@ public class Calculadora {
 	 * @param qtdeDias
 	 * @return
 	 */
-	public Double calculaValorTotalInvestido(Double investimentoDia, Long qtdeDias) {
+	public Double calculaValorTotalInvestido(Double investimentoDia, Integer qtdeDias) {
 		Double investimentoTotal;
 		
 		investimentoTotal = investimentoDia * qtdeDias;

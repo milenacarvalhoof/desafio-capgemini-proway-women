@@ -1,47 +1,58 @@
 package br.com.capgemini.desafio;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
+	
+	static List<Anuncio> listaAnuncio = new ArrayList<Anuncio>();
+	
 	public static void main(String[] args) {
-		Locale.setDefault(Locale.US);
+		Locale.setDefault(Locale.US);	
 		Scanner ler = new Scanner(System.in);
-		
-		System.out.print("Informe o nome do anúncio: ");
-		String nomeAnuncio = ler.nextLine();
 				
-		System.out.print("Informe o nome do cliente: ");
-		String nomeCliente = ler.nextLine();
-				
-		System.out.print("Informe a data de início (DD/MM/AAAA): ");
-		String dataInicio = ler.nextLine();
+		boolean isEnable = true;
+		final Anuncio anuncioBuilder = new Anuncio();
 		
-		System.out.print("Informe a data de término (DD/MM/AAAA): ");
-		String dataTermino = ler.nextLine();
+		while (isEnable) {			
+			Anuncio novoAnuncio = anuncioBuilder.cadastrarAnuncio();
+			
+			listaAnuncio.add(novoAnuncio);
+			
+			System.out.println("\nDeseja cadastrar um novo anuncio (S/N)?");
+			String resp = ler.nextLine();
+			
+			if (resp.equalsIgnoreCase("N")) {
+				isEnable = false;
+			}
+		}
 		
-		System.out.print("Informe o valor a ser investido por dia: ");
-		Double valorInvestidoDia = ler.nextDouble();
-						
-		Calculadora calculadora = new Calculadora();
-		
-		Long qtdeDias = calculadora.calculaQuantidadeDias(dataInicio, dataTermino);
-						
-		Double valorTotalInvestido = calculadora.calculaValorTotalInvestido(valorInvestidoDia, qtdeDias);
-		
-		Double totalClics = calculadora.calculaClics(valorTotalInvestido);
+							
+		for (Anuncio anuncio : listaAnuncio) {
+			Calculadora calculadora = new Calculadora();
+			
+			Integer qtdeDias = calculadora.calculaQuantidadeDias(anuncio.getDataInicio(), anuncio.getDataTermino());
+							
+			Double valorTotalInvestido = calculadora.calculaValorTotalInvestido(anuncio.getValorInvestidoDia(), qtdeDias);
+			
+			Double totalClics = calculadora.calculaClics(valorTotalInvestido);
 
-		Double totalCompartilhamentos = calculadora.calculaCompartilhamentos(totalClics);
+			Double totalCompartilhamentos = calculadora.calculaCompartilhamentos(totalClics);
+			
+			Double alcanceTotal = calculadora.calculaTotalVisualizacao(valorTotalInvestido, totalClics, totalCompartilhamentos);	
+			
+			System.out.println("\nANUNCIO: " + anuncio.getNomeAnuncio() + " - " + "CLIENTE: " + anuncio.getNomeCliente());
+					
+			System.out.printf("Valor total investido: R$ %.2f\n", valorTotalInvestido);
+			System.out.printf("Quantidade máxima de visualizações: %.0f\n", alcanceTotal);
+			System.out.printf("Quantidade máxima de cliques: %.0f\n", totalClics);
+			System.out.printf("Quantidade máxima de compartilhamentos: %.0f\n", totalCompartilhamentos);
+			
+			System.out.println("--------------------------------------------------------------------------");
+		}	
 		
-		Double alcanceTotal = calculadora.calculaTotalVisualizacao(valorTotalInvestido, totalClics, totalCompartilhamentos);	
-		
-		System.out.println("\nANUNCIO: " + nomeAnuncio + " - " + "CLIENTE: " + nomeCliente);
-				
-		System.out.printf("Valor total investido: R$ %.2f\n", valorTotalInvestido);
-		System.out.printf("Quantidade máxima de visualizações: %.0f\n", alcanceTotal);
-		System.out.printf("Quantidade máxima de cliques: %.0f\n", totalClics);
-		System.out.printf("Quantidade máxima de compartilhamentos: %.0f\n", totalCompartilhamentos);
-		
-		ler.close();
-		
+		ler.close();		
 	}
+	
 }
